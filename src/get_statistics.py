@@ -4,10 +4,17 @@ import timeit
 
 cap = cv2.VideoCapture('AT-full-episode.mp4')
 # cap = cv2.VideoCapture('AT-20secs.mp4')
-fgbg = cv2.createBackgroundSubtractorMOG2()
+fgbg = cv2.createBackgroundSubtractorMOG2(100, 16, False)
 
 
 start = timeit.timeit()
+def getRGBWeights ( frame ):
+    numberOfPixels = frame.size
+    RGBValueCount = np.sum(frame, axis=(0,1)) /numberOfPixels
+    RGBValues ='R', 'G', 'B'
+    # print(frame)
+    # print(dict(zip(RGBValues, RGBValueCount)))
+    return dict(zip(RGBValues, RGBValueCount))
 
 def countColors ():
     counter = {}
@@ -15,22 +22,26 @@ def countColors ():
     ret = True
     while(ret):
         ret, frame = cap.read()
+        if not ret:
+            break
         fgmask = fgbg.apply(frame)
         # cv2.imshow('original',frame)
         # cv2.imshow('fg',fgmask)
 
-        print('pos', time)
+        # maskValues are the colors, maskCounts the number of pixels with each column
+        maskValues, maskCounts = np.unique(fgmask, return_counts=True)
+        maskValueCounts = dict(zip(maskValues, maskCounts))
 
-        # uniques are the colors, counts the number of pixels with each column
-        uniques, counts = np.unique(fgmask, return_counts=True)
-        count_dict = dict(zip(uniques, counts))
-        for k in count_dict.keys():
+        # getRGBWeights(frame)
+        maskValueCounts.update(getRGBWeights(frame))
+
+        for k in maskValueCounts.keys():
             # if this is the first time a color appears
             if k not in counter:
                 counter[k] = np.zeros(frame_number)
                 print('new key', k)
 
-            counter[k] = np.append(counter[k], count_dict[k])
+            counter[k] = np.append(counter[k], maskValueCounts[k])
 
         k = cv2.waitKey(30) & 0xff
         if k == 27:
@@ -64,7 +75,7 @@ def format_csv(counter):
 
 
 output = countColors()
-write_to_file(format_csv(output), '01-full-episode_video-output_file.csv')
+write_to_file(format_csv(output), '01-full-video-output-file-with-rgb.csv')
 end = timeit.timeit()
 print(end - start)
 print(list(map(lambda k: str(k) + ':' + str(output[k].shape), output.keys())))
