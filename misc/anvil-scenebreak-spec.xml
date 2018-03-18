@@ -8,13 +8,9 @@
 
 <track-spec name="scene breaks" type="primarypoint" color-attr="scenebreak">
   <attribute name="break" >
-    <value-el color="blue">break</value-el>
-  </attribute>
-  <attribute name="start-fade" >
-    <value-el color="blue">start fade</value-el>
-  </attribute>
-  <attribute name="end-fade" >
-    <value-el color="blue">end fade</value-el>
+    <value-el color="blue">clean break</value-el>
+    <value-el color="red">start fade</value-el>
+    <value-el color="green">end fade</value-el>
   </attribute>
 </track-spec>
 
