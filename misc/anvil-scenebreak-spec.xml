@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- SHOWCASE ALL TRACK TYPES -->
+
+<annotation-spec>
+
+<body>
+
+<track-spec name="scene breaks" type="primarypoint" color-attr="scenebreak">
+  <attribute name="break" >
+    <value-el color="blue">break</value-el>
+  </attribute>
+  <attribute name="start-fade" >
+    <value-el color="blue">start fade</value-el>
+  </attribute>
+  <attribute name="end-fade" >
+    <value-el color="blue">end fade</value-el>
+  </attribute>
+</track-spec>
+
+</body>
+
+</annotation-spec>
