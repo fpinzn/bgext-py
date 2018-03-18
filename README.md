@@ -4,6 +4,9 @@ The object of this experiment is to achieve automatic background extraction from
 
 Though, there might be practical applications of this tool, it is done because I find the problem interesting.
 
+## How to use
+
+test: `pipenv run pytest`
 ## Subproblems
 
 To achieve the background extraction, the following sub-problems must be solved:
@@ -19,14 +22,18 @@ To achieve the background extraction, the following sub-problems must be solved:
 
 **Hypothesis**: A change in scene can be identified by a sudden "significant" change in the background of the scene.
 
+A simple approximation to identify these sudden changes is to find the difference between frames of the number of pixels identified either as foreground or background. A difference too high represents in most cases a camera break.
+
+
+
 
 ## Commands used
 
-This project uses [pipenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
-```sh
-pip install cv2
-pip install numpy
-```
+This project uses:
+-  [pipenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
+- opencv2
+- colorama
+- pytest
 
 ## ffmpeg
 
