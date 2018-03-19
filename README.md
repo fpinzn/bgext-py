@@ -27,13 +27,15 @@ A simple approximation to identify these sudden changes is to find the differenc
 
 
 
-## Commands used
+## Commands/tools used
 
 This project uses:
--  [pipenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
+- [pipenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 - opencv2
 - colorama
 - pytest
+- anvil
+- tableau
 
 ## ffmpeg
 

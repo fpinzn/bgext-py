@@ -11,6 +11,9 @@ numpy = "*"
 opencv-contrib-python = "==3.3.0.9"
 pytest = "*"
 colorama = "*"
+ipython = "*"
+"beautifulsoup4" = "*"
+lxml = "*"
 
 
 [dev-packages]
