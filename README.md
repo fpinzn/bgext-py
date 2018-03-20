@@ -7,6 +7,7 @@ Though, there might be practical applications of this tool, it is done because I
 ## How to use
 
 test: `pipenv run pytest`
+convert anvil annotations to csv with frames: `pipenv run python bin/anvil2frames.py misc/AT-full-episode-annotations.anvil -o out/AT-full-episode-correct-scene-break-frames.csv --fr 23.98`
 ## Subproblems
 
 To achieve the background extraction, the following sub-problems must be solved:

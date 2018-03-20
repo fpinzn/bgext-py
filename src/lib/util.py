@@ -1,10 +1,5 @@
 import numpy as np
 
-def write_to_file(data, file_name):
-    output_file = open(file_name, 'w')
-    output_file.write(str(data))
-    output_file.close()
-
 # expects a dict with the form {key: numpy array,...}
 
 def format_csv(counter):
@@ -46,3 +41,8 @@ def prefix_dict_keys(dictionary, prefix):
     for k in dictionary.keys():
         result[prefix+k] = dictionary[k]
     return result
+
+def write_to_file(data, file_name):
+    output_file = open(file_name, 'w')
+    output_file.write(str(data))
+    output_file.close()

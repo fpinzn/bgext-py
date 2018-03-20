@@ -4,7 +4,7 @@
 import numpy as np
 import cv2
 from datetime import datetime
-
+import util
 import os, sys
 
 def getRGBWeights ( frame ):
@@ -50,26 +50,6 @@ def countFgBgPixels (capture, foregroundBackgroundFilter):
 
     return counter
 
-def write_to_file(data, file_name):
-    output_file = open(file_name, 'w')
-    output_file.write(str(data))
-    output_file.close()
-
-def format_csv(counter):
-    file_content = 'frame'
-
-    # this assumes all arrays are the same size
-    number_of_frames = counter[list(counter.keys())[0]].size
-    for k in counter.keys():
-        file_content += ',' + str(k)
-
-    for i in range(number_of_frames):
-        file_content += '\n' + str(i)
-        for k in counter.keys():
-            file_content += ',' + str(counter[k][i])
-
-    return file_content
-
 
 # Things that might be passed as a param
 # videoPath
@@ -94,7 +74,7 @@ def run (videoPath, outputPath, pHistory = 0, pVarTreshold = 8):
     fgbg = cv2.createBackgroundSubtractorMOG2(history = pHistory, varThreshold = pVarTreshold, detectShadows = False)
     # processing
     output = countFgBgPixels(capture, fgbg)
-    write_to_file(format_csv(output), outputPath)
+    util.write_to_file(util.format_csv(output), outputPath)
     # teardown
     capture.release()
     cv2.destroyAllWindows()
