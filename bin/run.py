@@ -30,7 +30,7 @@ def run () :
 
     if args.rgb:
         ## get_rgb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
-        get_count_per_color_per_frame.run(args.videoPath, args.outputPath)
+        get_count_per_color_per_frame.run(args.videoPath)
     else:
         get_bgfb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
 

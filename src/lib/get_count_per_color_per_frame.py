@@ -1,5 +1,5 @@
 ## Counts color per frame
-FILE_PREFIX = 'color-count-per-frame'
+OUTPUT_FOLDER = 'out/count-color-frames/'
 
 import numpy as np
 import cv2
@@ -23,11 +23,17 @@ def get_pixel_count_per_color_in_frame ( frame ):
     hexColors = list(map(get_hex_from_decimal_bgr, decimalColors))
     pixelCountPerColor = dict(zip(hexColors, pixelCount))
     assert len(flattened_pixels) == sum(pixelCount)
-    # pixelCountPerColor = sorted(pixelCountPerColor, key=lambda k: pixelCountPerColor[k][0])
-
     return pixelCountPerColor
 
-def count_colors (capture):
+def format_json (dictionary):
+    result = '['
+    for color in dictionary:
+        result += '{"color":"' + str(color) + '","count":' + str(dictionary[color]) + '},'
+    # result[:-1] to remove the trailling comma
+    result = result[:-1] + ']'
+    return result
+
+def count_colors (capture, videoPath):
     counter = {}
     frame_number = 0
     ret = True
@@ -38,16 +44,14 @@ def count_colors (capture):
             break
 
         currentFramePixelsPerColorCount = get_pixel_count_per_color_in_frame(frame)
+        print('0,0',frame[0,0], get_hex_from_decimal_bgr(frame[0,0]))
+        print('100,100',frame[100,100], get_hex_from_decimal_bgr(frame[100,100]))
+        filePath = OUTPUT_FOLDER + os.path.basename(videoPath) + '-' + str(frame_number)
+        util.write_to_file(format_json(currentFramePixelsPerColorCount), filePath + '.json')
+        # show the frames
+        # cv2.imshow('original',frame)
+        cv2.imwrite(filePath + '.png', frame)
 
-        cv2.imshow('original',frame)
-        util.write_to_file(str(currentFramePixelsPerColorCount), 'out/countrgb' +'-'+str(frame_number))
-        # for k in currentFrameCount.keys():
-        #     # if this is the first time a color appears
-        #     if k not in counter:
-        #         counter[k] = np.array(np.zeros(frame_number))
-        #         # print('new key', k)
-
-            # counter[k] = np.append(counter[k], currentFrameCount[k])
         k = cv2.waitKey(30) & 0xFF
         if k == 27:
             break
@@ -59,19 +63,16 @@ def count_colors (capture):
     return counter
 
 
-def run (videoPath, outputPath):
+def run (videoPath):
     start = datetime.now()
 
     if not (os.path.exists(videoPath)):
         print('file', videoPath, 'does not exist')
         sys.exit()
 
-    if (os.access(outputPath, os.W_OK)):
-        print('cannot write to', outputPath)
-        sys.exit()
 
     capture = cv2.VideoCapture(videoPath)
-    output = count_colors(capture)
+    output = count_colors(capture, videoPath)
 
     capture.release()
     cv2.destroyAllWindows()
