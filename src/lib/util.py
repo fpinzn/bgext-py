@@ -27,10 +27,11 @@ def calc_diffs(counter):
     result = {}
     for k in counter.keys():
         # displaces the values one position and deletes the last one
+        print(counter)
         displaced = np.insert(counter[k][:-1], 0, counter[k][0])
         print(displaced, counter[k])
         print(counter[k] - displaced)
-        result[k] = counter[k] - displaced
+        result[k] = np.absolute(counter[k] - displaced)
 
     return result
 
