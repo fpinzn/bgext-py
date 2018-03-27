@@ -9,6 +9,7 @@ myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, myPath + '/../src/lib')
 import get_bgfb_difference
 import get_rgb_difference
+import get_count_per_color_per_frame
 
 def getArgs () :
     parser = argparse.ArgumentParser(description = 'Extract statistics about relative background-foreground change.')
@@ -28,7 +29,8 @@ def run () :
         'history:', args.history, 'treshold:', args.treshold, 'rgb analysis:', args.rgb, Style.RESET_ALL)
 
     if args.rgb:
-        get_rgb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
+        ## get_rgb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
+        get_count_per_color_per_frame.run(args.videoPath, args.outputPath)
     else:
         get_bgfb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
 

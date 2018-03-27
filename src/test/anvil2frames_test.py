@@ -15,6 +15,6 @@ def test_get_breaks_with_time_from_anvil_file_path():
 def test_convert_time_to_frame ():
     assert 25 == anvil2frames.convert_time_to_frame(1, 25)
 
-def test_convert_breaks_with_time_dict_to_frame_csv ():
+def test_convert_breaks_with_time_dict_to_frame_csv_text ():
     break_list = [('clean break', '11.76'), ('clean break', '12.88'), ('clean break', '15')]
-    assert anvil2frames.convert_breaks_with_time_dict_to_frame_csv(break_list, 10) == "frame,break-type\n117,clean break\n128,clean break\n150,clean break\n"
+    assert anvil2frames.convert_breaks_with_time_dict_to_frame_csv_text(break_list, 10) == "frame,break-type\n117,clean break\n128,clean break\n150,clean break\n"

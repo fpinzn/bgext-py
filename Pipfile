@@ -7,7 +7,7 @@ name = "pypi"
 
 [packages]
 
-numpy = "*"
+numpy = "==1.13.0"
 opencv-contrib-python = "==3.3.0.9"
 pytest = "*"
 colorama = "*"

@@ -21,12 +21,9 @@ To achieve the background extraction, the following sub-problems must be solved:
 
 ### 01. Background Change Speed
 
-**Hypothesis**: A change in scene can be identified by a sudden "significant" change in the background of the scene.
+**Hypothesis**: A change in scene can be identified by a sudden "significant" change in the proportion of foreground and background of the scene.
 
-A simple approximation to identify these sudden changes is to find the difference between frames of the number of pixels identified either as foreground or background. A difference too high represents in most cases a camera break.
-
-
-
+A simple approximation to identify these sudden changes is to find the difference between frames of the number of pixels identified either as foreground or background. A difference too high should, in most cases, represent a camera break.
 
 ## Commands/tools used
 
