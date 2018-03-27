@@ -11,6 +11,7 @@ import get_bgfb_difference
 import get_rgb_difference
 import get_count_per_color_per_frame
 import chromatic_distance
+import scene_writer
 
 def getArgs () :
     parser = argparse.ArgumentParser(description = 'Extract statistics about relative background-foreground change.')
@@ -19,15 +20,26 @@ def getArgs () :
     parser.add_argument('--history', dest = 'history', type = int, help='history of the fgbg filter')
     parser.add_argument('--treshold', dest = 'treshold', type = int, help='treshold of the fgbg filter')
     parser.add_argument('--rgb', dest = 'rgb', type = bool, default = False, const = True, nargs='?', help='rgb analysis')
+
+    subparsers = parser.add_subparsers(dest="subparser_name")
+    sceneExtractorSubParser = subparsers.add_parser('extract')
+    sceneExtractorSubParser.add_argument('-v', dest = 'videoPath', help='path of the video to extract scenes from')
+    sceneExtractorSubParser.add_argument('-c', dest = 'csvPath', help='path of the csv file with values per frame (ex. chromatic change)')
+
+
     return parser.parse_args()
 
 
 def run () :
     args = getArgs()
 
+    print(args)
     print(Fore.BLUE,
         'running with -> videoPath:', args.videoPath, 'outputPath:', args.outputPath,
         'history:', args.history, 'treshold:', args.treshold, 'rgb analysis:', args.rgb, Style.RESET_ALL)
+
+    if args.subparser_name == 'extract':
+        scene_writer.run(args.videoPath, args.csvPath)
 
     if args.rgb:
         ## get_rgb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
