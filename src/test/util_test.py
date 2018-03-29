@@ -43,7 +43,7 @@ def test_calc_diffs():
     result = calc_diffs(counter)
     assert np.array_equal(result['R'], [0,1,1,1])
     assert np.array_equal(result['G'], [0,1,1,1])
-    assert np.array_equal(result['B'], [0,-9,1,1])
+    assert np.array_equal(result['B'], [0,9,1,1])
 
 def test_prefix_dict_keys():
     initial = {'a':1, 'b': 2, 'c': 3}

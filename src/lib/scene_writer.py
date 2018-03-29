@@ -4,7 +4,6 @@ import timeit
 import os
 
 OUTPUT_FOLDER = 'out/scene-writer/chromatic-distance/'
-TRESHOLD = 9000
 
 # expects a video file and a csv
 
@@ -35,8 +34,8 @@ def extractScenes (capture, cutFunction):
     capture.release()
     cv2.destroyAllWindows()
 
-def generateCutFunction(frameValues):
-    return lambda frameNumber: frameValues[frameNumber] > TRESHOLD
+def generateCutFunction(frameValues, treshold):
+    return lambda frameNumber: frameValues[frameNumber] > treshold
 
 def getFromCSVFrameValues(filePath):
     file = open(filePath, 'r')
@@ -44,7 +43,7 @@ def getFromCSVFrameValues(filePath):
     return list(map(lambda l: float(l.split(',')[1]), lines[1:]))
 
 
-def run(videoPath, csvFilePath):
+def run(videoPath, csvFilePath, treshold = 9000):
     start = timeit.timeit()
 
     if not (os.path.exists(videoPath)):
@@ -54,7 +53,7 @@ def run(videoPath, csvFilePath):
         print('file', csvFilePath, 'does not exist')
         sys.exit()
 
-    cutFunction = generateCutFunction(getFromCSVFrameValues(csvFilePath))
+    cutFunction = generateCutFunction(getFromCSVFrameValues(csvFilePath), int(treshold))
 
     capture = cv2.VideoCapture(videoPath)
     extractScenes(capture, cutFunction)

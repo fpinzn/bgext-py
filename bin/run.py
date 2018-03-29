@@ -21,10 +21,15 @@ def getArgs () :
     parser.add_argument('--treshold', dest = 'treshold', type = int, help='treshold of the fgbg filter')
     parser.add_argument('--rgb', dest = 'rgb', type = bool, default = False, const = True, nargs='?', help='rgb analysis')
 
-    subparsers = parser.add_subparsers(dest="subparser_name")
-    sceneExtractorSubParser = subparsers.add_parser('extract')
+    subparser = parser.add_subparsers(dest="subparser")
+    sceneExtractorSubParser = subparser.add_parser('extract')
     sceneExtractorSubParser.add_argument('-v', dest = 'videoPath', help='path of the video to extract scenes from')
     sceneExtractorSubParser.add_argument('-c', dest = 'csvPath', help='path of the csv file with values per frame (ex. chromatic change)')
+    sceneExtractorSubParser.add_argument('-t', dest = 'treshold', help='treshold to consider a frame a scene cut file with values per frame (ex. chromatic change)')
+
+    chromaticDistanceSubparser = subparser.add_parser('chromatic-distance')
+    chromaticDistanceSubparser.add_argument('-v', dest = 'videoPath', help='path of the video to extract scenes from')
+    chromaticDistanceSubparser.add_argument('--rgb', dest = 'rgb', type = bool, default = False, const = True, nargs='?', help='rgb analysis')
 
 
     return parser.parse_args()
@@ -38,13 +43,11 @@ def run () :
         'running with -> videoPath:', args.videoPath, 'outputPath:', args.outputPath,
         'history:', args.history, 'treshold:', args.treshold, 'rgb analysis:', args.rgb, Style.RESET_ALL)
 
-    if args.subparser_name == 'extract':
-        scene_writer.run(args.videoPath, args.csvPath)
+    if args.subparser == 'extract':
+        scene_writer.run(args.videoPath, args.csvPath, args.treshold)
 
-    if args.rgb:
-        ## get_rgb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
-        # get_count_per_color_per_frame.run(args.videoPath)
-        chromatic_distance.run(args.videoPath)
+    if args.subparser == 'chromatic-distance':
+        chromatic_distance.run(args.videoPath, args.rgb)
     else:
         get_bgfb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
 

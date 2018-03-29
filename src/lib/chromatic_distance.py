@@ -1,6 +1,5 @@
 ## Gets the euclidean distance between frames
 OUTPUT_FOLDER = 'out/chromatic-distance/'
-HSV_COLOR_SPACE = True
 
 import numpy as np
 import cv2
@@ -12,23 +11,31 @@ from scipy.spatial import distance
 
 allHueValues = np.array([])
 
-def getDistanceRGB(lowerResoFrame, previousFrame):
-    reshapedFrame =  lowerResoFrame.reshape(lowerResoFrame.shape[0] * lowerResoFrame.shape[1] * lowerResoFrame.shape[2])
-    return int(np.linalg.norm(reshapedFrame - previousFrame))
+def getDistanceRGB(currentFrameLowerRes, previousFrameLowerRes):
+    diffenceVector = (currentFrameLowerRes - previousFrameLowerRes).flatten()
+    return int(np.linalg.norm(diffenceVector))
 
-def getDownsampledHue(lowerResoFrame):
-    hsvLowerResoFrame = cv2.cvtColor(lowerResoFrame, cv2.COLOR_BGR2HSV)
-    hueValues = hsvLowerResoFrame[:,:,0]
-    reshapedHueValues = hueValues.reshape(1, hueValues.size)
-    assert reshapedHueValues.size == hsvLowerResoFrame.shape[0] * hsvLowerResoFrame.shape[1]
-    return reshapedHueValues
+def getHSVFrame(lowerResoFrame):
+    return cv2.cvtColor(lowerResoFrame, cv2.COLOR_BGR2HSV)
 
-def getDistanceHSV(lowerResoFrameHues, previousFrameHues):
+def getDistanceHSV(currentFrameLowerRes, previousFrameLowerRes):
     # The Hue component is a circle so %180 is needed to calculate the correct distance between 2 hues
-    return int(np.linalg.norm((lowerResoFrameHues - previousFrameHues) % 180))
+    currentHues = currentFrameLowerRes[:, :, 0]
+    previousHues = previousFrameLowerRes[:, :, 0]
+
+    currentSV = currentFrameLowerRes[:, :, [1,2]]
+    previousSV = previousFrameLowerRes[:, :, [1,2]]
+    assert currentHues.shape == previousHues.shape
+    assert currentSV.shape == previousSV.shape
+
+    flatHueDifference = ((currentHues - previousHues) % 180).flatten()
+    flatSvDifference = (currentSV - previousSV).flatten()
+
+    differenceVector = np.concatenate((flatHueDifference, flatSvDifference))
+    return int(np.linalg.norm(differenceVector))
 
 
-def calcDistances (capture):
+def calcDistances (capture, useRgb):
     distances = np.array([])
     previousFrame = np.array([])
     frameNumber = 0
@@ -41,16 +48,16 @@ def calcDistances (capture):
         lowerResoFrame = cv2.pyrDown(cv2.pyrDown(frame))
 
         if previousFrame.size > 0:
-            if HSV_COLOR_SPACE:
-                lowerResoFrame = getDownsampledHue(lowerResoFrame)
-                currentDistance = getDistanceHSV(lowerResoFrame, previousFrame)
-            else:
+            if useRgb:
                 currentDistance = getDistanceRGB(lowerResoFrame, previousFrame)
+            else:
+                lowerResoFrame = getHSVFrame(lowerResoFrame)
+                currentDistance = getDistanceHSV(lowerResoFrame, previousFrame)
 
             print(frameNumber, currentDistance)
             distances = np.append(distances, currentDistance)
-        elif HSV_COLOR_SPACE:
-            lowerResoFrame = getDownsampledHue(lowerResoFrame)
+        elif not useRgb:
+            lowerResoFrame = getHSVFrame(lowerResoFrame)
 
         k = cv2.waitKey(30) & 0xff
         if k == 27:
@@ -62,7 +69,7 @@ def calcDistances (capture):
     return {'distances': distances}
 
 
-def run (videoPath):
+def run (videoPath, useRgb):
     start = datetime.now()
     outputPath = OUTPUT_FOLDER + os.path.basename(videoPath) + '-diffs-hsv.csv'
 
@@ -75,7 +82,7 @@ def run (videoPath):
         sys.exit()
 
     capture = cv2.VideoCapture(videoPath)
-    output = util.calc_diffs(calcDistances(capture))
+    output = util.calc_diffs(calcDistances(capture, useRgb))
 
     capture.release()
     cv2.destroyAllWindows()
