@@ -33,7 +33,7 @@ def test_getDistanceHSV():
         [[255,0,0],[255,0,0],[255,0,0]],
         [[255,0,0],[255,0,0],[255,0,1]]]
         )
-    assert getDistanceHSV(frame, frame2) == 1
+    assert getDistanceHSV(frame, frame2, useHueOnly=False) == 1
 
     frame = np.array(
         [[[360,0,0],[255,0,0],[255,0,0]],
@@ -45,4 +45,4 @@ def test_getDistanceHSV():
         [[255,0,0],[255,0,0],[255,0,0]],
         [[255,0,0],[255,0,0],[255,0,0]]]
         )
-    assert getDistanceHSV(frame, frame2) == 0
+    assert getDistanceHSV(frame, frame2, useHueOnly=False) == 0

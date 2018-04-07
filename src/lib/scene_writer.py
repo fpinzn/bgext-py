@@ -13,14 +13,18 @@ def extractScenes (capture, cutFunction):
     frameNumberOfLastCut = 0
     ret = True
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    sceneWriter = cv2.VideoWriter(OUTPUT_FOLDER + '0.mp4', fourcc, 23.98, (720,404))
+
+    width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))   # float
+    height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT)) # float
+
+    sceneWriter = cv2.VideoWriter(OUTPUT_FOLDER + '0.mp4', fourcc, 23.98, (width,height))
 
     while(ret):
         ret, frame = capture.read()
         recentlyCut = (frameNumber - frameNumberOfLastCut) < 3
         if cutFunction(frameNumber) and not recentlyCut:
             sceneWriter.release()
-            sceneWriter = cv2.VideoWriter(OUTPUT_FOLDER + str(frameNumber) + '.mp4',fourcc, 23.98, (720,404))
+            sceneWriter = cv2.VideoWriter(OUTPUT_FOLDER + str(frameNumber) + '.mp4',fourcc, 23.98, (width,height))
             frameNumberOfLastCut = frameNumber
         else:
             sceneWriter.write(frame)

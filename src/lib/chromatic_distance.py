@@ -18,20 +18,25 @@ def getDistanceRGB(currentFrameLowerRes, previousFrameLowerRes):
 def getHSVFrame(lowerResoFrame):
     return cv2.cvtColor(lowerResoFrame, cv2.COLOR_BGR2HSV)
 
-def getDistanceHSV(currentFrameLowerRes, previousFrameLowerRes):
+def getDistanceHSV(currentFrameLowerRes, previousFrameLowerRes, useHueOnly = True):
     # The Hue component is a circle so %180 is needed to calculate the correct distance between 2 hues
     currentHues = currentFrameLowerRes[:, :, 0]
     previousHues = previousFrameLowerRes[:, :, 0]
 
-    currentSV = currentFrameLowerRes[:, :, [1,2]]
-    previousSV = previousFrameLowerRes[:, :, [1,2]]
-    assert currentHues.shape == previousHues.shape
-    assert currentSV.shape == previousSV.shape
-
     flatHueDifference = ((currentHues - previousHues) % 180).flatten()
-    flatSvDifference = (currentSV - previousSV).flatten()
 
-    differenceVector = np.concatenate((flatHueDifference, flatSvDifference))
+    if useHueOnly:
+        differenceVector = flatHueDifference
+    else:
+        currentSV = currentFrameLowerRes[:, :, [1,2]]
+        previousSV = previousFrameLowerRes[:, :, [1,2]]
+        assert currentHues.shape == previousHues.shape
+        assert currentSV.shape == previousSV.shape
+
+        flatSvDifference = (currentSV - previousSV).flatten()
+
+        differenceVector = np.concatenate((flatHueDifference, flatSvDifference))
+
     return int(np.linalg.norm(differenceVector))
 
 
@@ -71,7 +76,7 @@ def calcDistances (capture, useRgb):
 
 def run (videoPath, useRgb):
     start = datetime.now()
-    outputPath = OUTPUT_FOLDER + os.path.basename(videoPath) + '-diffs-hsv.csv'
+    outputPath = OUTPUT_FOLDER + os.path.basename(videoPath) + '-diffs-h.csv'
 
     if not (os.path.exists(videoPath)):
         print('file', videoPath, 'does not exist')
