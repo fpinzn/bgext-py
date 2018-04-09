@@ -31,6 +31,9 @@ def getArgs () :
     chromaticDistanceSubparser.add_argument('-v', dest = 'videoPath', help='path of the video to extract scenes from')
     chromaticDistanceSubparser.add_argument('--rgb', dest = 'rgb', type = bool, default = False, const = True, nargs='?', help='rgb analysis')
 
+    colorCounterSubparser = subparser.add_parser('color-counter')
+    colorCounterSubparser.add_argument('-v', dest = 'videoPath', help='path of the video for which the numbers of pixels of each color, for each frame will be counted')
+
 
     return parser.parse_args()
 
@@ -48,6 +51,10 @@ def run () :
 
     if args.subparser == 'chromatic-distance':
         chromatic_distance.run(args.videoPath, args.rgb)
+
+    if args.subparser == 'color-counter':
+        get_count_per_color_per_frame.run(args.videoPath)
+
     else:
         get_bgfb_difference.run(args.videoPath, args.outputPath, args.history, args.treshold)
 

@@ -44,8 +44,6 @@ def count_colors (capture, videoPath):
             break
 
         currentFramePixelsPerColorCount = get_pixel_count_per_color_in_frame(frame)
-        print('0,0',frame[0,0], get_hex_from_decimal_bgr(frame[0,0]))
-        print('100,100',frame[100,100], get_hex_from_decimal_bgr(frame[100,100]))
         filePath = OUTPUT_FOLDER + os.path.basename(videoPath) + '-' + str(frame_number)
         util.write_to_file(format_json(currentFramePixelsPerColorCount), filePath + '.json')
         # show the frames
